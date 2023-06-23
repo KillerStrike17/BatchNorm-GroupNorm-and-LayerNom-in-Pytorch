@@ -14,9 +14,9 @@ def get_a_train_transform():
         Compose: Composed transformations
     """
     return A.Compose([
-        # A.ShiftScaleRotate(shift_limit=0.09, scale_limit=0.09, rotate_limit=7, p=0.5),
+        A.ShiftScaleRotate(shift_limit=0.09, scale_limit=0.09, rotate_limit=7, p=0.5),
         # A.Affine(scale=0.9, translate_percent=(-0.1, 0.1), rotate=7, shear=[-7, 7], cval=0, fit_output=False, p=0.2),
-        # A.RandomResizedCrop(height=28, width=28, scale=(0.8, 1.0), p=0.5),
+        A.RandomResizedCrop(height=32, width=32, scale=(0.8, 1.0), p=0.5),
         # A.RandomBrightnessContrast(p=0.5),
         #         A.GaussNoise(p=0.2),
         #         A.Equalize(p=0.2),

@@ -87,7 +87,7 @@ class CifarNet(nn.Module):
         nn (nn.Module): Instance of pytorch Module
     """
 
-    def __init__(self, base_channels=12, layers=3, drop=0.01, norm='bn'):
+    def __init__(self, base_channels=12, layers=3, drop=0.05, norm='bn'):
         """Initialize Network
 
         Args:
