@@ -8,7 +8,7 @@ GROUP_SIZE = 2
 
 
 class Block(nn.Module):
-    def __init__(self, input_size, output_size, padding=1, norm='bn', usepool=True):
+    def __init__(self, input_size, output_size, padding=1, norm='bn', usepool=True, miniblock = False):
         """Initialize Block
 
         Args:
@@ -35,6 +35,9 @@ class Block(nn.Module):
         elif norm == 'ln':
             self.n2 = nn.GroupNorm(1, output_size)
         self.conv3 = nn.Conv2d(output_size, output_size, 3, padding=padding)
+        self.trans1 = nn.Conv2d(output_size, output_size, 1)
+        self.trans2 = nn.Conv2d(output_size, output_size, 1)
+        self.trans3 = nn.Conv2d(output_size, output_size, 1)
         if norm == 'bn':
             self.n3 = nn.BatchNorm2d(output_size)
         elif norm == 'gn':
@@ -43,13 +46,13 @@ class Block(nn.Module):
             self.n3 = nn.GroupNorm(1, output_size)
         if usepool:
             self.pool = nn.MaxPool2d(2, 2)
+        self.trans_mapping = {1:self.trans1,2:self.trans2,3:self.trans3}
 
-    def __call__(self, x, layers=3, last=False):
+    def __call__(self, x,mapping, layers=3):
         """
         Args:
             x (tensor): Input tensor to this block
             layers (int, optional): Number of layers in this block. Defaults to 3.
-            last (bool, optional): Is this the last block. Defaults to False.
 
         Returns:
             tensor: Return processed tensor
@@ -65,19 +68,26 @@ class Block(nn.Module):
             x = self.conv3(x)
             x = self.n3(x)
             x = F.relu(x)
+        # if mapping ==1:
+        #     x = self.trans1(x)
+        # if mapping ==2:
+        #     x = self.trans2(x)
+        # if mapping ==3:
+        #     x = self.trans3(x)
         if self.usepool:
+            x = self.trans_mapping[mapping](x)
             x = self.pool(x)
         return x
 
 
-class Net(nn.Module):
+class CifarNet(nn.Module):
     """ Network Class
 
     Args:
         nn (nn.Module): Instance of pytorch Module
     """
 
-    def __init__(self, base_channels=4, layers=3, drop=0.01, norm='bn'):
+    def __init__(self, base_channels=12, layers=3, drop=0.01, norm='bn'):
         """Initialize Network
 
         Args:
@@ -86,14 +96,14 @@ class Net(nn.Module):
             drop (float, optional): Dropout value. Defaults to 0.01.
             norm (str, optional): Normalization type. Defaults to 'bn'.
         """
-        super(Net, self).__init__()
+        super(CifarNet, self).__init__()
 
         self.base_channels = base_channels
         self.drop = drop
         self.no_layers = layers
 
         # Conv
-        self.block1 = Block(1, self.base_channels, norm=norm)
+        self.block1 = Block(3, self.base_channels, norm=norm)
         self.dropout1 = nn.Dropout(self.drop)
         self.block2 = Block(self.base_channels,
                             self.base_channels*2, norm=norm)
@@ -116,13 +126,13 @@ class Net(nn.Module):
             tensor: tensor of logits
         """
         # Conv Layer
-        x = self.block1(x, layers=self.no_layers)
+        x = self.block1(x, layers=self.no_layers-1,mapping=1)
         if dropout:
             x = self.dropout1(x)
-        x = self.block2(x, layers=self.no_layers)
+        x = self.block2(x, layers=self.no_layers,mapping=2)
         if dropout:
             x = self.dropout2(x)
-        x = self.block3(x, layers=self.no_layers, last=True)
+        x = self.block3(x, layers=self.no_layers,mapping=3)
 
         # Output Layer
         x = self.gap(x)

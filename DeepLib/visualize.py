@@ -4,7 +4,7 @@ import numpy as np
 import itertools
 
 
-def print_samples(loader, count=16):
+def print_samples(loader, class_map,count=16):
     """Print samples input images
 
     Args:

@@ -6,7 +6,7 @@ from torch.utils.data import Dataset, DataLoader
 torch.manual_seed(1)
 
 
-class MnistDataset(Dataset):
+class MyDataset(Dataset):
     """
     Custom Dataset Class
 
@@ -51,7 +51,7 @@ class MnistDataset(Dataset):
         return (image, label)
 
 
-def get_loader(train_transform, test_transform, batch_size=64, use_cuda=True):
+def get_loader(dataset_name,train_transform, test_transform, batch_size=64, use_cuda=True):
     """Get instance of tran and test loaders
 
     Args:
@@ -64,15 +64,25 @@ def get_loader(train_transform, test_transform, batch_size=64, use_cuda=True):
         (DataLoader, DataLoader): Get instance of train and test data loaders
     """
     kwargs = {'num_workers': 4, 'pin_memory': True} if use_cuda else {}
+    if dataset_name =="MNIST":
+        train_loader = DataLoader(
+            MyDataset(datasets.MNIST('../data', train=True,
+                        download=True), transforms=train_transform),
+            batch_size=batch_size, shuffle=True, **kwargs)
 
-    train_loader = DataLoader(
-        MnistDataset(datasets.MNIST('../data', train=True,
-                     download=True), transforms=train_transform),
-        batch_size=batch_size, shuffle=True, **kwargs)
+        test_loader = DataLoader(
+            MyDataset(datasets.MNIST('../data', train=False,
+                        download=True), transforms=test_transform),
+            batch_size=batch_size, shuffle=True, **kwargs)
+    elif dataset_name =="CIFAR10":
+        train_loader = DataLoader(
+            MyDataset(datasets.CIFAR10('../data', train=True,
+                        download=True), transforms=train_transform),
+            batch_size=batch_size, shuffle=True, **kwargs)
 
-    test_loader = DataLoader(
-        MnistDataset(datasets.MNIST('../data', train=False,
-                     download=True), transforms=test_transform),
-        batch_size=batch_size, shuffle=True, **kwargs)
+        test_loader = DataLoader(
+            MyDataset(datasets.CIFAR10('../data', train=False,
+                        download=True), transforms=test_transform),
+            batch_size=batch_size, shuffle=True, **kwargs)
 
     return train_loader, test_loader
