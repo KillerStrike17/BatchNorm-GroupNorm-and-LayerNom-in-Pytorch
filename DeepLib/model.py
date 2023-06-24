@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 torch.manual_seed(1)
 
-GROUP_SIZE = 2
+GROUP_SIZE = 3
 
 
 class Block(nn.Module):

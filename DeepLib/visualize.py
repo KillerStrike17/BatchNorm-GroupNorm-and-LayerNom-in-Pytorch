@@ -18,7 +18,7 @@ def print_samples(loader, class_map,count=16):
     for imgs, labels in loader:
         for i in range(count):
             ax = fig.add_subplot(int(count/8), 8, i + 1, xticks=[], yticks=[])
-            ax.set_title(f'Label: {labels[i]}')
+            ax.set_title(f'Label: {class_map[labels[i].item()]}')
             plt.imshow(imgs[i].numpy().transpose(1, 2, 0))
         break
 

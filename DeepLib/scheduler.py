@@ -86,5 +86,5 @@ def one_cycle_lr_custom(optimizer, lr, max_lr, steps_per_epoch, epochs, anneal_s
     if epochs < 12:
         raise Exception("Epoch value can not be less than 12")
     schedule = np.interp(
-        np.arange(epochs+1), [0, 2, 8, 12, epochs], [lr, max_lr, lr/5.0, lr/10.0, 0])
+        np.arange(epochs+1), [0, 3, 8, 12, epochs], [lr, max_lr, lr/5.0, lr/7.0, 0])
     return CustomOneCycleLR(optimizer, schedule, steps_per_epoch)
