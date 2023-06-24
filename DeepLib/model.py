@@ -6,6 +6,192 @@ torch.manual_seed(1)
 
 GROUP_SIZE = 3
 
+class Net(nn.Module):
+    #This defines the structure of the NN.
+    def __init__(self):
+        super(Net, self).__init__()
+        self.conv1 = nn.Conv2d(1, 16, kernel_size=3,bias = False)
+        self.conv2 = nn.Conv2d(16, 16, kernel_size=3,bias = False)
+        self.conv3 = nn.Conv2d(16, 32, kernel_size=3,bias = False)
+        self.conv4 = nn.Conv2d(32, 16, kernel_size=1,bias = False)
+        self.conv5 = nn.Conv2d(16, 16, kernel_size=3,bias = False)
+        self.conv6 = nn.Conv2d(16, 16, kernel_size=3,bias = False)
+        self.conv7 = nn.Conv2d(16, 16, padding = 1, kernel_size=3,bias = False)
+        self.conv8 = nn.Conv2d(16, 16, kernel_size=3,bias = False)
+        self.conv9 = nn.Conv2d(16, 10, kernel_size=1,bias = False)
+        self.batch1 = nn.BatchNorm2d(16)
+        self.batch2 = nn.BatchNorm2d(16)
+        self.batch3 = nn.BatchNorm2d(32)
+        self.batch4 = nn.BatchNorm2d(16)
+        self.batch5 = nn.BatchNorm2d(16)
+        self.batch6 = nn.BatchNorm2d(16)
+        self.batch7 = nn.BatchNorm2d(16)
+        self.batch8 = nn.BatchNorm2d(16)
+        self.pool = nn.MaxPool2d(2,2)
+        self.dropout1 = nn.Dropout2d(0.1)
+        self.dropout2 = nn.Dropout2d(0.1)
+        self.dropout3 = nn.Dropout2d(0.1)
+        self.dropout4 = nn.Dropout2d(0.1)
+        self.dropout5 = nn.Dropout2d(0.1)
+        self.dropout6 = nn.Dropout2d(0.1)
+        self.dropout7 = nn.Dropout2d(0.1)
+        self.avgpool = nn.AvgPool2d(5)
+
+    def forward(self, x):
+        x = self.dropout1(self.batch1(F.relu(self.conv1(x))))
+        x = self.dropout2(self.batch2(F.relu(self.conv2(x))))
+        x = self.dropout3(self.batch3(F.relu(self.conv3(x))))
+        x = self.pool(F.relu(self.conv4(x)))
+        x = self.dropout4(self.batch4(F.relu(self.conv5(x))))
+        x = self.dropout5(self.batch5(F.relu(self.conv6(x))))
+        x = self.dropout6(self.batch6(F.relu(self.conv7(x))))
+        x = self.dropout7(self.batch7(F.relu(self.conv8(x))))
+        x = self.avgpool(self.conv9(x))
+        x = x.view(-1,10)
+
+        return F.log_softmax(x, dim=1)
+
+class Net1(nn.Module):
+    #This defines the structure of the NN.
+    
+    def __init__(self):
+        super(Net1, self).__init__()
+        DROPOUT =0.1
+        self.conv1 = nn.Conv2d(1, 12, kernel_size=3,bias = False)
+        self.conv2 = nn.Conv2d(12, 12, kernel_size=3,bias = False)
+        self.conv3 = nn.Conv2d(12, 20, kernel_size=3,bias = False)
+        self.conv4 = nn.Conv2d(20, 16, kernel_size=1,bias = False)
+        self.conv5 = nn.Conv2d(16, 16, kernel_size=3,bias = False)
+        self.conv6 = nn.Conv2d(16, 16, kernel_size=3,bias = False)
+        self.conv7 = nn.Conv2d(16, 16, padding = 1, kernel_size=3,bias = False)
+        self.conv8 = nn.Conv2d(16, 16, kernel_size=3,bias = False)
+        self.conv9 = nn.Conv2d(16, 10, kernel_size=1,bias = False)
+        self.batch1 = nn.BatchNorm2d(12)
+        self.batch2 = nn.BatchNorm2d(12)
+        self.batch3 = nn.BatchNorm2d(20)
+        self.batch4 = nn.BatchNorm2d(16)
+        self.batch5 = nn.BatchNorm2d(16)
+        self.batch6 = nn.BatchNorm2d(16)
+        self.batch7 = nn.BatchNorm2d(16)
+        self.batch8 = nn.BatchNorm2d(16)
+        self.pool = nn.MaxPool2d(2,2)
+        self.dropout1 = nn.Dropout2d(DROPOUT)
+        self.dropout2 = nn.Dropout2d(DROPOUT)
+        # self.dropout3 = nn.Dropout2d(DROPOUT)
+        self.dropout4 = nn.Dropout2d(DROPOUT)
+        self.dropout5 = nn.Dropout2d(DROPOUT)
+        # self.dropout6 = nn.Dropout2d(DROPOUT)
+        # self.dropout7 = nn.Dropout2d(DROPOUT)
+        self.avgpool = nn.AvgPool2d(5)
+
+    def forward(self, x):
+        x = self.dropout1(self.batch1(F.relu(self.conv1(x))))
+        x = self.dropout2(self.batch2(F.relu(self.conv2(x))))
+        x = self.batch3(F.relu(self.conv3(x)))
+        x = self.pool(F.relu(self.conv4(x)))
+        x = self.dropout4(self.batch4(F.relu(self.conv5(x))))
+        x = self.dropout5(self.batch5(F.relu(self.conv6(x))))
+        x = self.batch6(F.relu(self.conv7(x)))
+        x = self.batch7(F.relu(self.conv8(x)))
+        x = self.avgpool(self.conv9(x))
+        x = x.view(-1,10)
+
+        return F.log_softmax(x, dim=-1)
+
+class Net3(nn.Module):
+    #This defines the structure of the NN.
+    
+    def __init__(self):
+        DROPOUT_VALUE = 0
+        super(Net3, self).__init__()
+        self.conv1 = nn.Conv2d(1, 7, kernel_size=3,bias = False)
+        self.conv2 = nn.Conv2d(7, 16, kernel_size=3,bias = False)
+        # self.conv3 = nn.Conv2d(12, 12, kernel_size=3,bias = False)
+        self.conv4 = nn.Conv2d(16, 12, kernel_size=1,bias = False)
+        self.conv5 = nn.Conv2d(12, 16, kernel_size=3,bias = False)
+        self.conv6 = nn.Conv2d(16, 16, kernel_size=3,bias = False)
+        self.conv7 = nn.Conv2d(16, 16, kernel_size=3,bias = False)
+        # self.conv8 = nn.Conv2d(11, 11, kernel_size=3,bias = False)
+        self.conv9 = nn.Conv2d(16, 10, kernel_size=1,bias = True)
+        self.batch1 = nn.BatchNorm2d(7)
+        self.batch2 = nn.BatchNorm2d(16)
+        self.batch3 = nn.BatchNorm2d(16)
+        self.batch4 = nn.BatchNorm2d(16)
+        self.batch5 = nn.BatchNorm2d(16)
+        self.batch6 = nn.BatchNorm2d(16)
+        self.batch7 = nn.BatchNorm2d(16)
+        # self.batch8 = nn.BatchNorm2d(8)
+        self.pool = nn.MaxPool2d(2,2)
+        self.dropout1 = nn.Dropout2d(DROPOUT_VALUE)
+        self.dropout2 = nn.Dropout2d(DROPOUT_VALUE)
+        self.dropout3 = nn.Dropout2d(DROPOUT_VALUE)
+        self.dropout4 = nn.Dropout2d(DROPOUT_VALUE)
+        self.dropout5 = nn.Dropout2d(DROPOUT_VALUE)
+        self.dropout6 = nn.Dropout2d(DROPOUT_VALUE)
+        self.dropout7 = nn.Dropout2d(DROPOUT_VALUE)
+        self.avgpool = nn.AvgPool2d(5)
+
+    def forward(self, x):
+        x = self.dropout1(self.batch1(F.relu(self.conv1(x))))
+        x = self.dropout2(self.batch2(F.relu(self.conv2(x))))
+        # x = self.dropout3(self.batch3(F.relu(self.conv3(x))))
+        x = self.pool(F.relu(self.conv4(x)))
+        x = self.dropout4(self.batch4(F.relu(self.conv5(x))))
+        x = self.dropout5(self.batch5(F.relu(self.conv6(x))))
+        x = self.dropout6(self.batch6(F.relu(self.conv7(x))))
+        # x = self.dropout7(self.batch7(F.relu(self.conv8(x))))
+        x = self.avgpool(self.conv9(x))
+        x = x.view(-1,10)
+
+        return F.log_softmax(x, dim=-1)
+
+class Net2(nn.Module):
+    #This defines the structure of the NN.
+    
+    def __init__(self):
+        DROPOUT_VALUE = 0.1
+        super(Net2, self).__init__()
+        self.conv1 = nn.Conv2d(1, 7, kernel_size=3,bias = False)
+        self.conv2 = nn.Conv2d(7, 16, kernel_size=3,bias = False)
+        # self.conv3 = nn.Conv2d(12, 12, kernel_size=3,bias = False)
+        self.conv4 = nn.Conv2d(16, 12, kernel_size=1,bias = False)
+        self.conv5 = nn.Conv2d(12, 16, kernel_size=3,bias = False)
+        self.conv6 = nn.Conv2d(16, 16, kernel_size=3,bias = False)
+        self.conv7 = nn.Conv2d(16, 16, kernel_size=3,bias = False)
+        # self.conv8 = nn.Conv2d(11, 11, kernel_size=3,bias = False)
+        self.conv9 = nn.Conv2d(16, 10, kernel_size=1,bias = False)
+        self.batch1 = nn.BatchNorm2d(7)
+        self.batch2 = nn.BatchNorm2d(16)
+        self.batch3 = nn.BatchNorm2d(16)
+        self.batch4 = nn.BatchNorm2d(16)
+        self.batch5 = nn.BatchNorm2d(16)
+        self.batch6 = nn.BatchNorm2d(16)
+        self.batch7 = nn.BatchNorm2d(16)
+        # self.batch8 = nn.BatchNorm2d(8)
+        self.pool = nn.MaxPool2d(2,2)
+        self.dropout1 = nn.Dropout2d(DROPOUT_VALUE)
+        self.dropout2 = nn.Dropout2d(DROPOUT_VALUE)
+        self.dropout3 = nn.Dropout2d(DROPOUT_VALUE)
+        self.dropout4 = nn.Dropout2d(DROPOUT_VALUE)
+        self.dropout5 = nn.Dropout2d(DROPOUT_VALUE)
+        self.dropout6 = nn.Dropout2d(DROPOUT_VALUE)
+        self.dropout7 = nn.Dropout2d(DROPOUT_VALUE)
+        self.avgpool = nn.AvgPool2d(5)
+
+    def forward(self, x):
+        x = self.dropout1(self.batch1(F.relu(self.conv1(x))))
+        x = self.dropout2(self.batch2(F.relu(self.conv2(x))))
+        # x = self.dropout3(self.batch3(F.relu(self.conv3(x))))
+        x = self.pool(F.relu(self.conv4(x)))
+        x = self.dropout4(self.batch4(F.relu(self.conv5(x))))
+        x = self.dropout5(self.batch5(F.relu(self.conv6(x))))
+        x = self.dropout6(self.batch6(F.relu(self.conv7(x))))
+        # x = self.dropout7(self.batch7(F.relu(self.conv8(x))))
+        x = self.avgpool(self.conv9(x))
+        x = x.view(-1,10)
+
+        return F.log_softmax(x, dim=-1)
+
 
 class Block(nn.Module):
     def __init__(self, input_size, output_size, padding=1, norm='bn', usepool=True, miniblock = False):
